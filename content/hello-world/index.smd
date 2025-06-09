@@ -1,0 +1,126 @@
+---
+.title = "ZIG + Zine: Hello to this website",
+.date = @date("2005-01-01T00:00:00"),
+.author = "Sample Author",
+.layout = "page.shtml",
+.draft = false,
+--- 
+
+After countless starts and restarts, we are finally here. Live at last :)
+
+Hello everybody. This is the first entry of this webpage, where we'll talk about programming and finance in my very own space of the internet. Written by a human, for once.
+
+As a first blog post, I've decided to share my experience in setting up well... this website. There are plenty new cool things that I'm trying at the same time.
+
+First, this website is being rendered using the [Zine](https://zine-ssg.io), a static site generator entirely written in [Zig](https://ziglang.org). Zig itself is great, I've managed to write a few game ideas and ran a few "Advent of Code" exercises with the language, so why not give it a shot with Zine and support the tools being built with Zig?
+
+I'm also trying to get away from VS Code for a bit. Don't get me wrong, VS Code is a great text editor, with an infinite amount of plugins that _mostly_ work out of the box. Python being my day-to-day programming languange, the ability to just run jupyter in regular .py file helps a lot when you are doing a lot of iterative data cleaning, exploration and testing. At the same time, however, VS Code is distracting. Copilot keeps poping up. Updates messes with your custom hotkeys. File tree, navigation panes and terminal takes way to much space. It's painfully slow. And VS Code pretty much expects you to use the mouse to move around.
+
+So, along with Zine for my static site generator, comes [Helix](https://helix-editor.com), which is the text editor I'm using to type these words right now. I'm running Helix inside [tmux](https://github.com/tmux/tmux/wiki), which is a _terminal multiplexer_. With that, I can have zine debug server and Helix running in separate panes, going back an forth with ease.
+
+Finally, deployment. Zine is still very much in its infancy (it is at an alpha stage after all), so documentation covers only two forms of deployment: Github Pages and Cloudflare Pages. I'm a weirdo. I want to do it the old-school way and set up a proper server. For that, I chose [Caddy](https://caddyserver.com/), which is also a first for me. Oh boy, so many things to learn.
+
+## There were obivously some road blocks along the way
+
+But happily, fixing them was pretty straight forward. 
+
+#### Theming
+
+Road block no. 1 was setting up Helix to properly display the theme colors under WSL. Helix default theme was definitely not right and, when trying to change to another one, I got the error `Unsupported theme: theme requires true color support`. With some googling I got to [this closed issue](https://github.com/helix-editor/helix/issues/2292#issuecomment-1110179773), that suggested forcing `true-color = true` in my config.toml file. Apparently discoverability of true-color support is not straightforward, and so Helix defaults to 'false' on that matter. From this [other closed issue](https://github.com/cslarsen/jp2a/issues/17) Windows Terminal does support true color, but the terminal itself knows nothing about it. It is upon the user to inform the applications that require it. Ok. Config file adjusted, problem fixed.
+
+#### Configuring Helix for Zine
+
+After I was happy with my editor colors, then I had to properly setting up auto-completion and highlight for Ziggy, SuperMD and SuperHTML. These are config format, and supersets of markdown and html, respectively, used by Zine and not supported out of the box by Helix right now. Luckily, there is a [helix tooling setup](https://zine-ssg.io/docs/editors/helix/) page on Zine website, and I got 98% right in the first run. The only thing that did not work was creating the symbolic links to the Tree Sitter queries using the commands suggested. Once I changed to absolute paths on both sides of the linking, everything worked:
+
+**shell**
+```sh
+ln -s ABS_PATH_TO/ziggy/tree-sitter-ziggy/queries HELIX_RUNTIME_PATH/queries/ziggy
+ln -s ABS_PATH_TO/ziggy/tree-sitter-ziggy-schema/queries HELIX_RUNTIME_PATH/queries/ziggy_schema
+ln -s ABS_PATH_TO/supermd/editors/helix/queries/supermd HELIX_RUNTIME_PATH/queries/supermd
+ln -s ABS_PATH_TO/supermd/editors/helix/queries/supermd_inline HELIX_RUNTIME_PATH/queries/supermd_inline
+ln -s ABS_PATH_TO/superhtml/tree-sitter-superhtml/queries HELIX_RUNTIME_PATH/queries/superhtml
+```
+
+We're off to a good start. Nice looking text editor, and LSP properly configured.
+
+#### Working with Zine for the first time
+
+Running `zine init` on an empty directory scafolds a sample site with assets, layouts and content directories. Inside content, two subdirectories for a blog, and a devblog, plus an about page. Running `zine` after the project is set up starts a development server that listen to changes and auto-refresh. Great stuff :)
+
+A little too much for my humble purposes, as I just needed to setup a blog, with a greeting message to the readers and a list of blog posts following along. Changing the sample website to that was as simple as deleting the blog / devblog subfolders and creating a hello-world directory on top of the file hierarchy with an `index.smd` file inside.
+
+So, we went from this:
+
+```
+content
+├── about.smd
+├── blog
+│   ├── first-post
+│   │   ├── fanzine.jpg
+│   │   └── index.smd
+│   ├── index.smd
+│   └── second-post.smd
+├── devlog
+│   ├── 1989.smd
+│   ├── 1990.smd
+│   └── index.smd
+└── index.smd
+```
+
+To this:
+
+```
+content
+├── hello-world
+│   └── index.smd
+└── index.smd
+```
+
+Ah, the start of every project feels so simple...
+
+#### One bothering problem: exiting INSERT MODE on Helix inside tmux
+
+This is well documented in [Helix's Troubleshooting Wiki](https://github.com/helix-editor/helix/wiki/Troubleshooting#when-using-tmux-or-screen-there-is-a-delay-after-hitting-escape-before-its-registered), so I'm just gonna copy/paste. 
+
+> When using tmux or screen, there is a delay after hitting Escape before it's registered
+
+> This is because your terminal multiplexer is listening for escape keypresses itself, as part of its own escape sequences, and only passing them to Helix after a delay when it's stopped listening for more keypresses in the sequence. So when you press escape to return to normal mode in Helix, the terminal multiplexer catches it, and only passes it to Helix after the delay.
+>
+> For changing or disabling the timeout, both tmux.conf and screenrc accept a timeout in milliseconds.
+>
+> If you don't use escape in your tmux or screen escape sequences, you can disable it:
+>
+> * For tmux.conf (\~/.tmux.conf or /etc/tmux.conf), add set -sg escape-time 0
+>
+> * For screenrc (~/.screenrc or /etc/screenrc), maptimeout 0
+>
+> You can also set the timeout to a low value instead:
+>
+> * For tmux.conf, set -sg escape-time 10
+>
+> * For screenrc, maptimeout 10
+
+Text is pretty self explanatory. Moving on.
+
+#### Release time!
+
+First blog post ready, some minimal .css tweaks, and we are ready to go live. Curiously enough, Zine does not have documentation for an 'old-school' deployment, making public files and setting up a server. Instead, it offers two deployment options (Github Pages and Cloudflare Pages) and both rely rely on a Github Actions .yml to set things up. Information on deployment, then, is rather limiting. Luckily, the [Cloudflare Pages doc][https://zine-ssg.io/docs/deploying/cloudflare-pages/] has a "Build Locally" subsection where you can see that building locally is just a `zine release` command. You'll also learn from that same page that `zine release` does not clear the output directory automatically. I just wished these were not nested inside the CloudFlare deploy, as it feels unintuitive. 
+
+Alright, but building locally is extremely simple. We're going with the Caddy server for that matter, at it presents itself as a modern and secure option, with auto TLS certificates. To be fairly honest, I've deployed servers with NGINX and Apache before and they always felt _ancient_ and britle. How I got to Caddy is a whole other story... Suffice to say, I was experimenting with Laravel, which has several deployment options, one of which is FrankenPHP which, in turn, uses Caddy as the backbone. But more on that on the next post.
+
+On to Caddy:
+
+- uninstalled apache2
+- needed to run `caddy adapt` so update Caddyfile config
+
+
+#### One curious bug, perhaps? 
+
+2. Zine seems to not properly inform all links to the browser?
+
+This is a weird one. I've been using Vim bindings on all my web browsers for a while now, with the excellent Vimium plugin.
+With Vimium, press `f` while and all clickable DOM elements will show a little key, that you can use to navigate to that link. See below:
+
+TODO: ADD PICTURE HERE
+
+This has been pretty consistent with almost every page, but to my surprise, some of the links in the Zine website are not being parsed correctly by Vimium. Not sure why that is, but is a minor detail to keep in mind, because my own website may have the same problem. 
