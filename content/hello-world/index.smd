@@ -104,7 +104,7 @@ Text is pretty self explanatory. Moving on.
 
 #### Release time!
 
-First blog post ready, some minimal .css tweaks, and we are ready to go live. Curiously enough, Zine does not have documentation for an 'old-school' deployment, making public files and setting up a server. Instead, it offers two deployment options (Github Pages and Cloudflare Pages) and both rely rely on a Github Actions .yml to set things up. Information on deployment, then, is rather limiting. Luckily, the [Cloudflare Pages doc][https://zine-ssg.io/docs/deploying/cloudflare-pages/] has a "Build Locally" subsection where you can see that building locally is just a `zine release` command. You'll also learn from that same page that `zine release` does not clear the output directory automatically. I just wished these were not nested inside the CloudFlare deploy, as it feels unintuitive. 
+First blog post ready, some minimal .css tweaks, and we are ready to go live. Curiously enough, Zine does not have documentation for an 'old-school' deployment, making public files and setting up a server. Instead, it offers two deployment options (Github Pages and Cloudflare Pages) and both rely rely on a Github Actions .yml to set things up. Information on deployment, then, is rather limiting. Luckily, the [Cloudflare Pages doc](https://zine-ssg.io/docs/deploying/cloudflare-pages/) has a "Build Locally" subsection where you can see that building locally is just a `zine release` command. You'll also learn from that same page that `zine release` does not clear the output directory automatically. I just wished these were not nested inside the CloudFlare deploy, as it feels unintuitive. 
 
 Alright, but building locally is extremely simple. We're going with the Caddy server for that matter, at it presents itself as a modern and secure option, with auto TLS certificates. To be fairly honest, I've deployed servers with NGINX and Apache before and they always felt _ancient_ and britle. How I got to Caddy is a whole other story... Suffice to say, I was experimenting with Laravel, which has several deployment options, one of which is FrankenPHP which, in turn, uses Caddy as the backbone. But more on that on the next post.
 
@@ -135,7 +135,7 @@ Lastly, we need to configure caddy to run automatically whenever there's a serve
 
 #### Final thoughts:
 
-Scripty discoverability:
+1. Debugging with Zine and discoverability:
 
 Debugging Zine when things go wrong still feels a little bit raw. For instance, when adding a favicon.png asset to the project:
 
@@ -144,6 +144,40 @@ Debugging Zine when things go wrong still feels a little bit raw. For instance, 
 ```
 
 The page threw an error of: `layouts/templates/base.shtml:9:4: unexpected_character_in_attribute_name` when it should have printed a much easier to understand `asset not found error` instead (the file name was favicon-white, not "light").
+
+Also, since `Scripty` only supports a limited set of literals (strings, numbers and booleans), it is hard to inspect structured fields such as `$site` and `$page` to check what is actually being stored in such global variables. If you try to debug-print a structure of any kind, such as `<p :text="$site.pages()"></p>`, Zine will fail to build your website and will throw you this:
+
+```
+ZINE BUILD ERROR
+
+
+
+---------- SCRIPT RESULT TYPE MISMATCH ----------
+A script evaluated to an unexpected type.
+
+This attribute expects to evaluate to one
+of the following types:
+   - string
+   - int
+
+[script_eval_not_string_or_int]
+(base.shtml) layouts/templates/base.shtml:18:7:
+    <p :text="$site.pages()"></p>
+       ^^^^^
+
+note: value was generated from this sub-expression:
+(base.shtml) layouts/templates/base.shtml:18:20:
+    <p :text="$site.pages()"></p>
+                    ^^^^^^
+Scripty evaluated to type: array  
+
+trace:
+    template `base.shtml`,
+    layout `index.shtml`,
+    content `content/index.smd`. 
+```
+
+I like the idea of scripty being a very minimal scripting language, but I believe there's no way to currently inspect your global functions, variables and hierarchies. You prettyu much _have_ to rely on SuperHTML and SuperMD documentation to be 100% updated and just trust everything will work. I also tried printing those variables to the console, but couldn't find a way. Maybe we add a .to_string() method so that other structures can be rendered to page for debugging purposes?
 
 #### One curious bug, perhaps? 
 

@@ -18,7 +18,7 @@
     <h1 class="site-title" :text="$site.title"></h1>
     <nav>
       <a class="nav" href="$site.page('').link()">Home</a>
-      <a class="nav" href="$site.page('refs').link()">Library</a>
+      <!-- <a class="nav" href="$site.page('refs').link()">Bookmarks</a> -->
     </nav>
     <super>
     <footer>

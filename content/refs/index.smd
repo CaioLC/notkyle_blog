@@ -8,7 +8,7 @@
     .layout = "blog.xml", 
     .output = "index.xml",
 }],
-.draft = false,
+.draft = true,
 --- 
 
 This page defines the blog section and lists all posts in it.
