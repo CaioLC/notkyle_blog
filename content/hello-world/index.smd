@@ -125,6 +125,12 @@ And that's it. After updating the "A records" on DNS provider, we're live on [no
 
 Some final touches before we end this post. First we need to configure github actions, so the website updates automatically whenever I push to the main branch. 
 
+This is the file:
+
+```
+	
+```
+
 Lastly, we need to configure caddy to run automatically whenever there's a server restart for whatever reason. 
 
 #### One curious bug, perhaps? 
