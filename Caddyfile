@@ -1,4 +1,4 @@
-localhost
+165.232.132.56 notkyle.dev localhost
 
 root * ./public
 file_server
