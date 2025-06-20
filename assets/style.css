@@ -2,12 +2,14 @@
 /*  Color Variables */
 /* ================ */
 :root {
-  --text-primary: #ccc;
-  --text-secondary: #ddd;
+  --text-primary: #fafaf9; /* stone-50 */
+  --text-secondary: #d6ded1;
   --text-emphasis: #fff;
-  --text-link: #eee;
-  --bg-primary: #121212;
+  --text-link: #ea580c; /* orange-600 */
+  --text-link-hover: #9a3412; /* orange-800 */
+  --bg-primary: #1f1b1b;
   --border-color: #fff;
+  --transition-duration: 0.2s;
 }
 
 /* ============= */
@@ -17,7 +19,7 @@ html {
   color: var(--text-primary);
   background-color: var(--bg-primary);
   font-family: "Georgia", serif;
-  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.25rem); /* Fluid base font size */
+  font-size: clamp(1em, 0.95em + 0.25vw, 1.25em); /* Fluid base font size */
   display: flex;
   justify-content: center;
 }
@@ -50,6 +52,7 @@ body {
 p {
   line-height: 1.6; /* More readable line height */
   margin-bottom: 1.25em;
+  color: var(--text-primary);
 }
 
 h1, h2, h3, h4, h5 {
@@ -125,13 +128,19 @@ pre, code {
   white-space: pre-wrap;
   word-wrap: break-word;
   word-break: break-word;
-  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   font-size: 0.9em;
 }
 
 pre {
   padding: 1em;
+}
+
+p:has(+pre) {
+  margin-bottom: 0;
+}
+p+pre {
+  margin-top: 5px;
 }
 
 /* ============= */

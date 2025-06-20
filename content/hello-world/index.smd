@@ -12,7 +12,7 @@ Hello everybody. This is the first entry of this webpage, where we'll talk about
 
 As a first blog post, I've decided to share my experience in setting up well... this website. There are plenty new cool things that I'm trying at the same time.
 
-First, this website is being rendered using the [Zine](https://zine-ssg.io), a static site generator entirely written in [Zig](https://ziglang.org). Zig itself is great, I've managed to write a few game ideas and ran a few "Advent of Code" exercises with the language, so why not give it a shot with Zine and support the tools being built with Zig?
+First, this website is being rendered using [Zine](https://zine-ssg.io), a static site generator entirely written in [Zig](https://ziglang.org). Zig itself is great, I've managed to write a few game ideas and ran a few "Advent of Code" exercises with the language, so why not give it a shot with Zine and support the tools being built with Zig?
 
 I'm also trying to get away from VS Code for a bit. Don't get me wrong, VS Code is a great text editor, with an infinite amount of plugins that _mostly_ work out of the box. Python being my day-to-day programming languange, the ability to just run jupyter in regular .py file helps a lot when you are doing a lot of iterative data cleaning, exploration and testing. At the same time, however, VS Code is distracting. Copilot keeps poping up. Updates messes with your custom hotkeys. File tree, navigation panes and terminal takes way to much space. It's painfully slow. And VS Code pretty much expects you to use the mouse to move around.
 
