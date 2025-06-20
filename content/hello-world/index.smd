@@ -108,11 +108,24 @@ First blog post ready, some minimal .css tweaks, and we are ready to go live. Cu
 
 Alright, but building locally is extremely simple. We're going with the Caddy server for that matter, at it presents itself as a modern and secure option, with auto TLS certificates. To be fairly honest, I've deployed servers with NGINX and Apache before and they always felt _ancient_ and britle. How I got to Caddy is a whole other story... Suffice to say, I was experimenting with Laravel, which has several deployment options, one of which is FrankenPHP which, in turn, uses Caddy as the backbone. But more on that on the next post.
 
-On to Caddy:
+On to Caddy, things were pretty straightforward, with solid documentation to follow. On the first run, Caddy warned that `certutil` (manages certificates and key databases) was missing and recomended installing libnss3-tools (`apt install libnss3-tools`). One of Caddy's main sell point is automatic HTTPS provision with TLS certificates out of the box and automatic renewals, with no extra configuration. So it was nice to see the warning message about a missing dependency that could break that. 
 
-- uninstalled apache2
-- needed to run `caddy adapt` so update Caddyfile config
+After Caddy was running and without message warnings, I created a Caddyfile on the root dir of this website, with configuration details. Since HTTPS is provided by default, with no explicit configuration necessary, the Caddyfile was ridiculous simple. Just 3 lines:
 
+````
+<server_ip> notkyle.dev localhost
+
+root * ./public
+file_server
+````
+
+And that's it. After updating the "A records" on DNS provider, we're live on [notkyle.dev](https://notkyle.dev) :)
+
+#### Automations to make my life easier
+
+Some final touches before we end this post. First we need to configure github actions, so the website updates automatically whenever I push to the main branch. 
+
+Lastly, we need to configure caddy to run automatically whenever there's a server restart for whatever reason. 
 
 #### One curious bug, perhaps? 
 
