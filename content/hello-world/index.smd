@@ -1,6 +1,6 @@
 ---
 .title = "ZIG + Zine: Hello to this website",
-.date = @date("2005-01-01T00:00:00"),
+.date = @date("2025-06-20T00:00:00"),
 .author = "Sample Author",
 .layout = "page.shtml",
 .draft = false,
@@ -132,6 +132,18 @@ This is the file:
 ```
 
 Lastly, we need to configure caddy to run automatically whenever there's a server restart for whatever reason. 
+
+#### Final thoughts:
+
+Scripty discoverability:
+
+Debugging Zine when things go wrong still feels a little bit raw. For instance, when adding a favicon.png asset to the project:
+
+```
+<link rel="icon" type="image/png" href="$site.asset('favicon-light.png').link()"
+```
+
+The page threw an error of: `layouts/templates/base.shtml:9:4: unexpected_character_in_attribute_name` when it should have printed a much easier to understand `asset not found error` instead (the file name was favicon-white, not "light").
 
 #### One curious bug, perhaps? 
 

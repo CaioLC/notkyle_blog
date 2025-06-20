@@ -6,6 +6,7 @@
     <title :text="$site.title"></title>
     <link type="text/css" rel="stylesheet" href="$site.asset('style.css').link()">
     <link type="text/css" rel="stylesheet" href="$site.asset('highlight.css').link()">
+    <link type="image/png" rel="icon" href="$site.asset('favicon-white2.png').link()">
     <!-- mathtex -->
     <link type="text/css" rel="stylesheet" href="$site.asset('Temml-Local.css').link()">
     <script defer src="$site.asset('temml.min.js').link()"></script>
@@ -16,11 +17,9 @@
   <body id="body">
     <h1 class="site-title" :text="$site.title"></h1>
     <nav>
-      <a href="$site.page('').link()">Home</a>
+      <a class="nav" href="$site.page('').link()">Home</a>
+      <a class="nav" href="$site.page('refs').link()">Library</a>
     </nav>
-    <p :loop="$site.page('blog').subpages()">
-      <title :text="$loop.it.title"></title>
-    </p>
     <super>
     <footer>
       <hr>
