@@ -106,7 +106,7 @@ Text is pretty self explanatory. Moving on.
 
 First blog post ready, some minimal .css tweaks, and we are ready to go live. Curiously enough, Zine does not have documentation for an 'old-school' deployment, making public files and setting up a server. Instead, it offers two deployment options (Github Pages and Cloudflare Pages) and both rely rely on a Github Actions .yml to set things up. Information on deployment, then, is rather limiting. Luckily, the [Cloudflare Pages doc](https://zine-ssg.io/docs/deploying/cloudflare-pages/) has a "Build Locally" subsection where you can see that building locally is just a `zine release` command. You'll also learn from that same page that `zine release` does not clear the output directory automatically. I just wished these were not nested inside the CloudFlare deploy, as it feels unintuitive. 
 
-Alright, but building locally is extremely simple. We're going with the Caddy server for that matter, at it presents itself as a modern and secure option, with auto TLS certificates. To be fairly honest, I've deployed servers with NGINX and Apache before and they always felt _ancient_ and britle. How I got to Caddy is a whole other story... Suffice to say, I was experimenting with Laravel, which has several deployment options, one of which is FrankenPHP which, in turn, uses Caddy as the backbone. But more on that on the next post.
+But building locally should be extremely simple. We're going with the Caddy server for that matter, at it presents itself as a modern and secure option, with auto TLS certificates. To be fairly honest, I've deployed servers with NGINX and Apache before and they always felt _ancient_ and britle. How I got to Caddy is a whole other story... Suffice to say, I was experimenting with Laravel, which has several deployment options, one of which is FrankenPHP which, in turn, uses Caddy as the backbone. But more on that on the next post.
 
 On to Caddy, things were pretty straightforward, with solid documentation to follow. On the first run, Caddy warned that `certutil` (manages certificates and key databases) was missing and recomended installing libnss3-tools (`apt install libnss3-tools`). One of Caddy's main sell point is automatic HTTPS provision with TLS certificates out of the box and automatic renewals, with no extra configuration. So it was nice to see the warning message about a missing dependency that could break that. 
 
@@ -121,23 +121,9 @@ file_server
 
 And that's it. After updating the "A records" on DNS provider, we're live on [notkyle.dev](https://notkyle.dev) :)
 
-#### Automations to make my life easier
-
-Some final touches before we end this post. First we need to configure github actions, so the website updates automatically whenever I push to the main branch. 
-
-This is the file:
-
-```
-	
-```
-
-Lastly, we need to configure caddy to run automatically whenever there's a server restart for whatever reason. 
-
 #### Final thoughts:
 
-1. Debugging with Zine and discoverability:
-
-Debugging Zine when things go wrong still feels a little bit raw. For instance, when adding a favicon.png asset to the project:
+One final thought before we wrap things out, debugging Zine when things go wrong still feels a little bit raw. For instance, when adding a favicon.png asset to the project:
 
 ```
 <link rel="icon" type="image/png" href="$site.asset('favicon-light.png').link()"
@@ -179,13 +165,3 @@ trace:
 
 I like the idea of scripty being a very minimal scripting language, but I believe there's no way to currently inspect your global functions, variables and hierarchies. You prettyu much _have_ to rely on SuperHTML and SuperMD documentation to be 100% updated and just trust everything will work. I also tried printing those variables to the console, but couldn't find a way. Maybe we add a .to_string() method so that other structures can be rendered to page for debugging purposes?
 
-#### One curious bug, perhaps? 
-
-2. Zine seems to not properly inform all links to the browser?
-
-This is a weird one. I've been using Vim bindings on all my web browsers for a while now, with the excellent Vimium plugin.
-With Vimium, press `f` while and all clickable DOM elements will show a little key, that you can use to navigate to that link. See below:
-
-TODO: ADD PICTURE HERE
-
-This has been pretty consistent with almost every page, but to my surprise, some of the links in the Zine website are not being parsed correctly by Vimium. Not sure why that is, but is a minor detail to keep in mind, because my own website may have the same problem. 
