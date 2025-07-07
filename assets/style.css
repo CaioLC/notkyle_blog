@@ -99,6 +99,10 @@ a:hover {
   text-decoration: underline;
 }
 
+span.date + a > h3 {
+  margin-top: 0.2em;
+}
+
 /* ============= */
 /*  Navigation   */
 /* ============= */

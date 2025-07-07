@@ -1,7 +1,7 @@
 ---
 .title = "ZIG + Zine: Hello to this website",
 .date = @date("2025-06-20T00:00:00"),
-.author = "Sample Author",
+.author = "Caio Castro",
 .layout = "page.shtml",
 .draft = false,
 --- 

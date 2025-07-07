@@ -1,0 +1,124 @@
+---
+.title = "PHP + Laravel: the website that never was",
+.date = @date("2025-07-07T00:00:00"),
+.author = "Caio Castro",
+.layout = "page.shtml",
+.draft = false,
+--- 
+
+This is a _post mortem_ post. A few months ago, when I decided to build a dev blog, my initial thought was to run it on Laravel. A few friends of mine professionally run Laravel to build and manage several websites and they are very vocal about it being a mature, bateries included framework, and easy to work. Then I found Laracast, with _excelent_ free material on learning PHP and Laravel so decided to give it a go. Everything was running smoothly, in an week or so I had a functional devblog, but in the end, the website never got to see the light of day. So, what went wrong? 
+
+Nothing particularly wrong with Laravel and PHP, to be honest. And now I do get why most are passionate advocates of the framework. For me, though, handling PHP (which differs significantly from my day-to-day python syntax), Laravel, databases... it just felt to much ground to cover for a humble dev blog hobby project. The novelties of a new languange (which differs significantly from my day-to-day python), plus all the contracts/interfaces of Laravel would eventually get in the way of actually writing something.
+
+Regardless, it was a pretty fun experience learning PHP and Laravel. And I documented my experience along the way, so decided not to let that go into the void. The text below is the last, unfinished version of what would be a Hello World blog in PHP + Laravel. You'll notice that past me was pretty excited about all the bells and whistles, and the possibility of building an ambitious website. Present me just wants a nice corner on the internet, where I can write unbothered anything that comes to mind :)
+
+----------
+
+## PHP + Laravel: Hello world. Setting up a dev blog.
+
+
+Welcome to my little corner of the internet where we share some stories about finance, game development (maybe?), programming tips and other subjects I feel like documenting. This first post is all about setting up... well, this blog. Welcome, and come along for the ride. 
+
+I never much liked web development, to be honest. I've tried good old-fashioned HTML+CSS+JS, learned my whereabouts in some popular frameworks (Angular, React, Vue and Svelte) and did some fun experiments with HTMX. I've even tried some Rust frameworks and Elm (this one is actually pretty interesting), but never felt in love with any of it. If you take a peak at my local folders (please don't), there's a graveyard of fun, little web projects that never saw the light of day. Against all odds, one succeeded. There's this simple website I wrote for my company, using python's Django framework.
+
+Web development is deceptively complex. You have to handle presentation, interaction, static files, dynamic content, security, routing, styling, accessibility, testing, different screen spaces, different browsers... the list goes on and on. And though I've tried a load of frameworks that supposedly were "batteries included" to handle all those scenarios, as the projects grew, it always felt exponentially bureaucratic to refactor even the smallest thing.
+
+Frustrated with my (several) previous attempts at finding a workflow that suits me, here I am, trying yet another programming language and yet another framework. We often say "insanity is repetition of the same action expecting different results". Well, we're doing exactly that with this PHP + Laravel experience.
+
+## Setting my PHP + Laravel environment
+
+It wasn't that hard to choose a new programming language. I've pretty much exhausted most of the obvious choices except for Go and PHP, I think :)
+
+Go should be the easiest to learn for me, as the syntax is pretty similar to Python, which I use daily for the past several years. To be honest though, I just find the error handling in Go to be insufferably bad. Realizing I would have to sprinkle ```if err != nil``` all over the place, Go instantly lost its appeal. On this matter in particular, error handling feels much more ergonomic in Rust and Zig. When error handling is defined as a critical aspect of a language (the programmer _must_ adhere to the language's error interface for code to compile), then ergonomics is surely a critical matter as well.
+
+PHP on the other hand is a pretty ancient language in comparison, so I find syntax a little janky compared to more modern languages. It's main drawback (for me), is one of its strengths, as it has the advantages of being around for a long time. Also, it is geared towards web development (PHP originally stood for "Personal Home Page" according to Wikipedia) and it hosts the Laravel framework nowadays, which is a very popular "batteries included" framework. Not least important, there's this place called [Laracast](https://laracasts.com) with great content on both PHP and Laravel, with free, good quality, introductory courses to both PHP and Laravel (thanks guys). So I decided to give it a shot.
+
+Having quickly run through the PHP for Beginners series, I then decided it was time to setup a Laravel environment and follow through the Laravel tutorials. On my windows machine, installation wasn't as straight forward as I was expecting. First, I tried the "one-click" solution called Herd, which is a GUI for managing all things PHP | Laravel. For some reason it wasn't able to install properly, the errors were hard to get behind the GUI, and the solutions displayed on the web sounded too complicated for something designed to be one-click (the whole purpose of this kind of managed environment is to _not_ be worried about debugging your setup), so I took one step back and went to the good-old console installation. 
+
+For the console, we'll use Windows Subsistem for Linux (WSL) and installed Laravel as if I were on a Linux machine. Once I had NPM and Postgres installed, I was finally off to a good start.
+
+If you're following along, this should get you going from a fresh Ubuntu WSL2 install (or any Ubuntu machine, for that matter):
+
+**shell**
+```sh
+sudo apt install postgresql postgresql-contrib
+sudo apt install nodejs npm
+/bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.4)"
+laravel new your-project-name
+cd your-project-name
+npm install && npm run build
+composer run dev
+```
+
+Selecting Postgres as my default database wasn't straightforward as well, as I got this error message:
+
+**shell**
+```sh
+[logs] ┌ 23:34:52 PDOException ──────────────────── vendor/laravel/.../Connector.php:67
+[logs] │ SQLSTATE[08006] [7] connection to server at "127.0.0.1", port 5432 failed: ...
+[logs] └────────────────────────────────────────────────────────── artisan queue:work ┘
+```
+
+After checking out my postgres server I noticed Laravel failed to create the database, so I created it manually and ran the migration scripts to setup the tables from the template project with `php artisan migrate`.
+
+Finally, running `composer run dev` gives me no error message and I'm finally able to start coding.
+
+## Some Blog Pages.
+
+After a few days following along the tutorial for Laravel, I gotta say, I am positively impressed. It's deep, but you can span the very first pages pretty easily. It's intuitive with good error messages. It has a fantastic CLI. Most of all, it is _opinionated first_ with sensible defaults, but customizable (should you require). By using the CLI to create your models, controllers, tables (and so on), there's so much being handled automatically for you that, for the very first time in almost a decade, setting up web pages with dynamic content feels _intuitive_. 
+
+Just to scratch the surface, want to get all posts with a specific tag? Sure: $tag->posts. Don't need the full record, but only the post title? Look no further than $tag->posts->pluck('title'). And pagination? Woof, that is next-level wizardry. The amount of annoying SQL Queries, json handling and logic that's been hidden away is great. And the API is concise enough that it is not scary to add simple statements directly into the view (maybe that will bite me in the future, but that's a future-me problem).
+
+With the basics of Lavarel under my fingertips, I then proceeded to scaffold this project simple structure. We'll have Posts, Tags and Images tables and models. We'll setup a many-to-many posts-tags pivot table. A landing page (/posts) and a post page (/posts/{id}). And that's pretty much it. To support the pages, I spun a few reusable components, such as blog-card, note-container, img-container, code-container, so they help me to properly display this blog's content. I'm using Laravel's Blade components for templating the website.
+
+For CSS, I decided to use the default Tailwinds integration. To be fairly honest, there's _a lot_ happening behind the scenes (there's composer, npm packages, vite.config, tailwind.config and .js and .css resources) and I no nearly proficient to walk the dependency path for each of these files, so I kept customization to a minimal. The only thing I made sure to add was prism [LINK], so we can properly display code snippets along the way.
+
+## Deploy
+
+After the website was functional in localhost:8000 it was then time to serve it to the world. Laravel docs have a pretty short deployment section that recommends using either nginx, FrankenPHP or their paid, hastle free service, Laravel Forge. I don't like nginx, and I don't like hastle-free. So lets go with FrankenPHP. 
+
+I first attempted at setting the server on my local machine. We build the files with `npm run build` to ensure all dependencies were duly placed at the ./public folder, and after binding to a port different than 80 / 443 (these are bound to the OS) we got the server running with `sudo frankenphp php-server -r public/ -l localhost:8000`. Great.
+
+For the actual setup: (i) db with proper user / password management; (ii) hosting font-types locally; (iii) setting up firewall and hardening. On a barebones Linux virtual machine, these were the steps to setup and deploy the server.
+
+- install FrankenPHP following their deployment documentation.
+- spin out your preferred database
+- create a new DB user, database and setup authorization
+- hardening: (ssh access with certificates only, firewall rules)
+- update your environment variables and build everything (npm run build | php artisan migrate:fresh)
+- run server `frankenphp php-server -r public/`
+
+_Et voilá_, we're live on 165.232.132.56:443, or whatever IP address my service provider defines from time to time :)
+
+## What I didn't like:
+
+It's only been a few days working with PHP and Laravel, so the difficulties I'm about to list here were probably my fault. Regardless, as this exercise was a hands-on experience of a complete beginner in the framework, maybe a complete beginner could face these challenges as well.
+
+Lavarel documentation. It is thorough, details everything you might need to know about the architecture but, still, I failed to properly navigate it through, and had to constantly look for tutorials and blog posts elsewhere to make the few tweaks I required to setup my website. Laravel is also very modular (which is a good thing), but the documentation addresses some of the modules, _in tandem_ of the core functionality. For instance, if you search for "CSS Customization" in the Laravel docs, you will find links to the Notifications module, Mail module and Lavarel Pulse and none of that matters to me, as I am not using these modules. Segregation of "core" and add-ons feels a little bit blurry.
+
+Automagic. It is great when it works, not so great when you need to debug. As so much is dependent on assumptions, any detour to defaults are "viral", meaning you need to manually configure calls in a variety of places before things can properly work again. Unless you follow a structured tutorial on Laravel, it is hard to detect these default values by reading the docs alone.
+
+Lack of a structured tutorial. Ok, I need to be more specific on this. There is a _ton_ of good quality content on Laravel out there, but there is no _official_ tutorial alongside the API documentation. Django is an excellent example on this approach. If you go to Django's webpage, as you click the "getting started" link, the website offers you two different paths: a tutorial project and the documentation itself. I tend to learn best from tutorials and the lack of an official one led me to wander in the docs for a bit.
+
+VS Code support is not great. Dependency injection adds a _ton_ of methods, static functions, parameters, inner functions, etc., and handling all that can be a little overwhelming at times. IntelliSense also failed me a few times, not pointing to function definitions and failing to catch some of my rookie PHP mistakes. Perhaps it is time to ditch VS Code anyways, so I did not bother trying to improve the coding experience, at least for now.
+
+## Next Steps
+
+There's still much to do on this website but these are a few that I want to implement and maybe document the experience:
+
+- CI | CD integration. As it stands, the production environment needs to be manually updated after a git push. We need to fix this.
+- Add support for math equations. We'll need them for finance, after all.
+- Embedding 3rd party content. Ahm, cool Youtube videos?
+- Integrate with a mailing provider. Anyone should subscribe and get notified when new posts arrive
+- Integrate with payment. In case anyone wants to buy me a coffee
+- Add RSS. For the folks out there that still use it (anyone?)
+- Add tags to each post. We need to allow the reader to navigate the huge amount of posts in the future :)
+- Add a markdown-to-blade-components parser (possibly create one myself?). Let's make writing these blog posts a little easier.
+- Have all blog posts in Portuguese as well. For my beloved countrymen.
+- Comments section. Future-me problem, for sure, but community building matters.
+
+Woof, there's plenty to do. Hopefully some of these become nice post blogs as well.
+
+---
+
+So there you have it. An uneditted glimpse of past-me. As it would turn out, the difficulties I was already experiencing during development with PHP would bite me in the end after all. Moreover, the easiness of working with database records would prove unecessary if all you have is a list of static pages of a single author to display. It's a great framework, but not for this project.
